@@ -31,6 +31,7 @@ namespace Unlockify
       On.RoR2.Run.DoesEveryoneHaveThisUnlockableUnlocked_UnlockableDef += TrueifyRunAll;
       On.RoR2.UserProfile.HasUnlockable_UnlockableDef += TrueifyProfile;
       On.RoR2.UserProfile.HasDiscoveredPickup += TrueifyPickup;
+      On.RoR2.UserProfile.HasSurvivorUnlocked += TrueifySurvivor;
 
       stopwatch.Stop();
       Log.Info_NoCallerPrefix($"Initialized in {stopwatch.Elapsed.TotalSeconds:F2} seconds");
@@ -55,6 +56,15 @@ namespace Unlockify
     private bool TrueifyProfile(On.RoR2.UserProfile.orig_HasUnlockable_UnlockableDef orig, UserProfile self, UnlockableDef unlockableDef)
     {
       return true;
+    }
+
+    private bool TrueifySurvivor(On.RoR2.UserProfile.orig_HasSurvivorUnlocked orig, UserProfile self, SurvivorIndex survivorIndex)
+    {
+      SurvivorDef survivorDef = SurvivorCatalog.GetSurvivorDef(survivorIndex);
+      if (survivorDef)
+        return true;
+
+      return false;
     }
 
     private bool TrueifyPickup(On.RoR2.UserProfile.orig_HasDiscoveredPickup orig, UserProfile self, PickupIndex pickupIndex)
