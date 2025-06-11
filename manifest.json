@@ -1,10 +1,10 @@
 ﻿{
-	"name": "NewMod",
+	"name": "Unlockify",
 	"version_number": "1.0.0",
 	"website_url": "",
-	"description": "Template",
+	"description": "Unlocks everything WITHOUT AFFECTING ACHIEVEMENTS. Anything locked before installing will be locked after uninstalling/disabling the mod.",
 	"dependencies": [
-		"bbepis-BepInExPack-5.4.2117",
-		"RiskofThunder-HookGenPatcher-1.2.4"
+		"bbepis-BepInExPack-5.4.2119",
+		"RiskofThunder-HookGenPatcher-1.2.8"
 	]
 }
