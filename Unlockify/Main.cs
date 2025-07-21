@@ -14,7 +14,7 @@ namespace Unlockify
     public const string PluginGUID = PluginAuthor + "." + PluginName;
     public const string PluginAuthor = "Nuxlar";
     public const string PluginName = "Unlockify";
-    public const string PluginVersion = "1.0.1";
+    public const string PluginVersion = "1.0.2";
 
     internal static Main Instance { get; private set; }
     public static string PluginDirectory { get; private set; }
@@ -46,15 +46,34 @@ namespace Unlockify
 
       On.RoR2.PreGameController.AnyUserHasUnlockable += TrueifyPreGameController;
 
-      On.RoR2.AchievementSystemSteam.AddAchievement += DontGrantAchievement;
+      On.RoR2.AchievementSystemSteam.AddAchievement += DontGrantSteamAchievement;
+      On.RoR2.AchievementSystemEOS.AddAchievement += DontGrantEGSAchievement;
+
+      On.RoR2.EclipseRun.GetLocalUserSurvivorCompletedEclipseLevel += GiveMaxEclipseLevel;
+      On.RoR2.EclipseRun.GetNetworkUserSurvivorCompletedEclipseLevel += GiveMaxEclipseLevel2;
 
       stopwatch.Stop();
       Log.Info_NoCallerPrefix($"Initialized in {stopwatch.Elapsed.TotalSeconds:F2} seconds");
     }
 
-    private void DontGrantAchievement(On.RoR2.AchievementSystemSteam.orig_AddAchievement orig, AchievementSystemSteam self, string achievementName)
+    private void DontGrantSteamAchievement(On.RoR2.AchievementSystemSteam.orig_AddAchievement orig, AchievementSystemSteam self, string achievementName)
     {
 
+    }
+
+    private void DontGrantEGSAchievement(On.RoR2.AchievementSystemEOS.orig_AddAchievement orig, AchievementSystemEOS self, string achievementName)
+    {
+
+    }
+
+    private int GiveMaxEclipseLevel(On.RoR2.EclipseRun.orig_GetLocalUserSurvivorCompletedEclipseLevel orig, LocalUser localUser, SurvivorDef survivorDef)
+    {
+      return EclipseRun.maxEclipseLevel;
+    }
+
+    private int GiveMaxEclipseLevel2(On.RoR2.EclipseRun.orig_GetNetworkUserSurvivorCompletedEclipseLevel orig, NetworkUser networkUser, SurvivorDef survivorDef)
+    {
+      return EclipseRun.maxEclipseLevel;
     }
 
     private bool TrueifyStatSheet(On.RoR2.Stats.StatSheet.orig_HasUnlockable orig, RoR2.Stats.StatSheet self, UnlockableDef def)
