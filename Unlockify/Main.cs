@@ -6,19 +6,27 @@ using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Networking;
 
+// I well and truly have no idea what I'm doing - I barely know any C# and my programming abilities are novice at best
+// Relying on a lot of outside help here, llms, w3schools, geeksforgeeks
+
 namespace Unlockify
 {
   [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
   public class Main : BaseUnityPlugin
   {
     public const string PluginGUID = PluginAuthor + "." + PluginName;
-    public const string PluginAuthor = "Nuxlar";
-    public const string PluginName = "Unlockify";
-    public const string PluginVersion = "1.0.2";
+    public const string PluginAuthor = "Nuxlar+Lucifish+W3Schools+Caffeine";
+    public const string PluginName = "UnlockifySkinsOnlyTest";
+    public const string PluginVersion = "1.0";
 
     internal static Main Instance { get; private set; }
     public static string PluginDirectory { get; private set; }
 
+    /*
+    I'm crossing my fingers that defining the collection of what is a skin outside of the awake function is safe and rational
+    I don't actually have enough knowledge of class/instance management, or file structure in general, so. YOLO I guess.
+    */
+    
     public void Awake()
     {
       Instance = this;
