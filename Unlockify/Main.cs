@@ -28,9 +28,9 @@ namespace Unlockify
     I don't actually have enough knowledge of class/instance management, or file structure in general, so. YOLO I guess.
     */
     
-    public static readonly HashSet<UnlockableDef> isAskinUnlockable = new HashSet<UnlockableDef>();
+    public static readonly HashSet<UnlockableDef> SkinUnlocksHash = new HashSet<UnlockableDef>();
     // I don't know what the UnlockableDef type is or where it's coming from. I will let the wizard guide me and just hope it works out
-    public static readonly HashSet<UnlockableDef> isAskinUnlockable = new HashSet<UnlockableDef>();
+    public static readonly HashSet<string> SkinSpecificUnlocksHash = new HashSet<string>();
     // I know there are other mods that add skins so I'm going to make this public and hope it doesn't explode
 
     public void Awake()
@@ -71,6 +71,27 @@ namespace Unlockify
       Log.Info_NoCallerPrefix($"Initialized in {stopwatch.Elapsed.TotalSeconds:F2} seconds");
     }
 
+    private void FindBuildUnlockableSkins()
+    {
+      //my dumb ass would just wing it but the wizard machine is suggesting I do this so I will
+      try {
+        var listOfSkins = SkinCatalog.allSkinDefs;
+        if (listOfSkins != null) { //no code explosions here no siree not today
+          foreach (var skinLoopElem in listOfSkins) {
+            var g = skinLoopElem?.unlockableDef;
+            if (g != null)
+            { //please don't explode
+              SkinUnlocksHash.Add(g);
+              if (!string.IsNullOrEmpty(g.cachedName)) SkinSpecificUnlocksHash.Add(g.cachedName);
+              if (!string.IsNullOrEmpty(g.name)) SkinSpecificUnlocksHash.Add(g.name);
+            }
+          }
+        }
+      }
+      catch { //I think this is just the fallback behavior if it doesn't work? I'm just going to use this to troll I guess
+        Log.Info_NoCallerPrefix($"Luci you can't code dipshit moron your code doesn't work womp womp dumbass")
+      }
+    }
     private void DontGrantSteamAchievement(On.RoR2.AchievementSystemSteam.orig_AddAchievement orig, AchievementSystemSteam self, string achievementName)
     {
 
