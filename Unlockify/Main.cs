@@ -86,7 +86,6 @@ namespace Unlockify
             { //please don't explode
               SkinUnlocksHash.Add(g);
               if (!string.IsNullOrEmpty(g.cachedName)) SkinSpecificUnlocksHash.Add(g.cachedName);
-              if (!string.IsNullOrEmpty(g.name)) SkinSpecificUnlocksHash.Add(g.name);
             }
           }
         }
@@ -98,7 +97,7 @@ namespace Unlockify
 
     private bool IsTheSkinUnlockable(UnlockableDef def) {
       return def != null
-      && (SkinUnlocksHash.Contains(def) || SkinSpecificUnlocksHash.Contains(def.name) || SkinSpecificUnlocksHash.Contains(def.cachedName));
+      && (SkinUnlocksHash.Contains(def) || SkinSpecificUnlocksHash.Contains(def.cachedName));
     }
     private bool IsTheSkinUnlockable(string name) {//We're well past the point where I don't know what's going on. Maybe it'll work maybe it wont
       if (string.IsNullOrEmpty(name)) return false;
