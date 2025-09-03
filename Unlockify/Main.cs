@@ -91,7 +91,7 @@ namespace Unlockify
         }
       }
       catch { //I think this is just the fallback behavior if it doesn't work? I'm just going to use this to troll I guess
-        Log.Info_NoCallerPrefix($"Luci you can't code dipshit moron your code doesn't work womp womp dumbass");
+        //Log.Info_NoCallerPrefix($"Luci you can't code dipshit moron your code doesn't work womp womp dumbass");
       }
     }
 
