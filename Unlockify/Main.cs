@@ -71,8 +71,7 @@ namespace Unlockify
       Log.Info_NoCallerPrefix($"Initialized in {stopwatch.Elapsed.TotalSeconds:F2} seconds");
     }
 
-    private void FindBuildUnlockableSkins()
-    {
+    private void FindBuildUnlockableSkins() {
       //my dumb ass would just wing it but the wizard machine is suggesting I do this so I will
       try {
         var listOfSkins = SkinCatalog.allSkinDefs;
@@ -91,6 +90,17 @@ namespace Unlockify
       catch { //I think this is just the fallback behavior if it doesn't work? I'm just going to use this to troll I guess
         Log.Info_NoCallerPrefix($"Luci you can't code dipshit moron your code doesn't work womp womp dumbass")
       }
+    }
+
+    private bool IsTheSkinUnlockable(UnlockableDef def) {
+      return def != null
+      && (SkinUnlocksHash.Contains(def) || SkinSpecificUnlocksHash.Contains(def.name) || SkinSpecificUnlocksHash.Contains(def.cachedName));
+    }
+    private bool IsTheSkinUnlockable(string name) {//We're well past the point where I don't know what's going on. Maybe it'll work maybe it wont
+      if (string.IsNullOrEmpty(name)) return false;
+      if (SkinSpecificUnlocksHash.Contains(name)) return true;
+      var def = UnlockableCatalog.GetUnlockableDef(name);
+      return IsTheSkinUnlockable(def);
     }
     private void DontGrantSteamAchievement(On.RoR2.AchievementSystemSteam.orig_AddAchievement orig, AchievementSystemSteam self, string achievementName)
     {
