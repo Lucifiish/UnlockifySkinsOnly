@@ -2,6 +2,7 @@ using BepInEx;
 using RoR2;
 using RoR2.UI;
 using RoR2.UI.LogBook;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -15,7 +16,7 @@ namespace Unlockify
   public class Main : BaseUnityPlugin
   {
     public const string PluginGUID = PluginAuthor + "." + PluginName;
-    public const string PluginAuthor = "Nuxlar+Lucifish+W3Schools+Caffeine";
+    public const string PluginAuthor = "Nuxlar+Lucifish+Internet+Caffeine";
     public const string PluginName = "UnlockifySkinsOnlyTest";
     public const string PluginVersion = "1.0";
 
@@ -27,9 +28,15 @@ namespace Unlockify
     I don't actually have enough knowledge of class/instance management, or file structure in general, so. YOLO I guess.
     */
     
+    public static readonly HashSet<UnlockableDef> isAskinUnlockable = new HashSet<UnlockableDef>();
+    // I don't know what the UnlockableDef type is or where it's coming from. I will let the wizard guide me and just hope it works out
+    public static readonly HashSet<UnlockableDef> isAskinUnlockable = new HashSet<UnlockableDef>();
+    // I know there are other mods that add skins so I'm going to make this public and hope it doesn't explode
+
     public void Awake()
     {
       Instance = this;
+      // I don't know what this; means and it scares me
 
       Stopwatch stopwatch = Stopwatch.StartNew();
 
