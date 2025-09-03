@@ -42,30 +42,34 @@ namespace Unlockify
 
       Log.Init(Logger);
 
+      //let's hope this works
+      FindBuildUnlockableSkins();
+
       On.RoR2.Run.IsUnlockableUnlocked_UnlockableDef += TrueifyRun;
       On.RoR2.Run.IsUnlockableUnlocked_string += TrueifyRun2;
       On.RoR2.Run.DoesEveryoneHaveThisUnlockableUnlocked_UnlockableDef += TrueifyRunAll;
       On.RoR2.Run.DoesEveryoneHaveThisUnlockableUnlocked_string += TrueifyRunAll2;
 
-      On.RoR2.UnlockableCatalog.GetUnlockableDef_string += PreventAchievement1;
-      On.RoR2.UnlockableCatalog.GetUnlockableDef_UnlockableIndex += PreventAchievement2;
+      //On.RoR2.UnlockableCatalog.GetUnlockableDef_string += PreventAchievement1;
+      //On.RoR2.UnlockableCatalog.GetUnlockableDef_UnlockableIndex += PreventAchievement2;
 
       On.RoR2.UserProfile.HasUnlockable_UnlockableDef += TrueifyProfile;
       On.RoR2.UserProfile.HasUnlockable_string += TrueifyProfile2;
-      On.RoR2.UserProfile.HasDiscoveredPickup += TrueifyPickup;
-      On.RoR2.UserProfile.HasSurvivorUnlocked += TrueifySurvivor;
-      On.RoR2.UserProfile.HasAchievement += TrueifyAchievement;
-      On.RoR2.UserProfile.CanSeeAchievement += TrueifyAchievement2;
 
-      On.RoR2.Stats.StatSheet.HasUnlockable += TrueifyStatSheet;
+      //On.RoR2.UserProfile.HasDiscoveredPickup += TrueifyPickup;
+      //On.RoR2.UserProfile.HasSurvivorUnlocked += TrueifySurvivor;
+      //On.RoR2.UserProfile.HasAchievement += TrueifyAchievement;
+      //On.RoR2.UserProfile.CanSeeAchievement += TrueifyAchievement2;
+
+      //On.RoR2.Stats.StatSheet.HasUnlockable += TrueifyStatSheet;
 
       On.RoR2.PreGameController.AnyUserHasUnlockable += TrueifyPreGameController;
 
       On.RoR2.AchievementSystemSteam.AddAchievement += DontGrantSteamAchievement;
       On.RoR2.AchievementSystemEOS.AddAchievement += DontGrantEGSAchievement;
 
-      On.RoR2.EclipseRun.GetLocalUserSurvivorCompletedEclipseLevel += GiveMaxEclipseLevel;
-      On.RoR2.EclipseRun.GetNetworkUserSurvivorCompletedEclipseLevel += GiveMaxEclipseLevel2;
+      // On.RoR2.EclipseRun.GetLocalUserSurvivorCompletedEclipseLevel += GiveMaxEclipseLevel;
+      // On.RoR2.EclipseRun.GetNetworkUserSurvivorCompletedEclipseLevel += GiveMaxEclipseLevel2;
 
       stopwatch.Stop();
       Log.Info_NoCallerPrefix($"Initialized in {stopwatch.Elapsed.TotalSeconds:F2} seconds");
@@ -88,7 +92,7 @@ namespace Unlockify
         }
       }
       catch { //I think this is just the fallback behavior if it doesn't work? I'm just going to use this to troll I guess
-        Log.Info_NoCallerPrefix($"Luci you can't code dipshit moron your code doesn't work womp womp dumbass")
+        Log.Info_NoCallerPrefix($"Luci you can't code dipshit moron your code doesn't work womp womp dumbass");
       }
     }
 
@@ -106,7 +110,6 @@ namespace Unlockify
     {
 
     }
-
     private void DontGrantEGSAchievement(On.RoR2.AchievementSystemEOS.orig_AddAchievement orig, AchievementSystemEOS self, string achievementName)
     {
 
@@ -137,71 +140,82 @@ namespace Unlockify
       return null;
     }
 
+//"Run_IsUnlockableUnlocked_UnlockableDef"
     private bool TrueifyRun(On.RoR2.Run.orig_IsUnlockableUnlocked_UnlockableDef orig, Run self, UnlockableDef unlockableDef)
-    {
+    { //If I understand what I'm changing here correctly, this should be replacing the "always unlock" use of this call to do, I think, nothing? Maybe?
       if (NetworkServer.active)
-        return true;
+        return IsTheSkinUnlockable(unlockableDef) ? true : orig(self, unlockableDef);
       Log.Warning("[Server] function 'Unlockify.TrueifyRun' called on client");
-      return false;
+      return orig(self, unlockableDef);
     }
 
+//"Run_IsUnlockableUnlocked_string"
     private bool TrueifyRun2(On.RoR2.Run.orig_IsUnlockableUnlocked_string orig, Run self, string unlockableName)
     {
       if (NetworkServer.active)
-        return true;
+        return IsTheSkinUnlockable(unlockableName) ? true : orig(self, unlockableName);
       Log.Warning("[Server] function 'Unlockify.TrueifyRun2' called on client");
-      return false;
+      return orig(self, unlockableName);
     }
 
+//"PreGameController_AnyUserHasUnlockable"
     private bool TrueifyPreGameController(On.RoR2.PreGameController.orig_AnyUserHasUnlockable orig, UnlockableDef unlockableDef)
     {
       if (NetworkServer.active)
-        return true;
+        return IsTheSkinUnlockable(unlockableDef) ? true : orig(unlockableDef);
       Log.Warning("[Server] function 'Unlockify.TrueifyPreGameController' called on client");
-      return false;
+      return orig(unlockableDef);
     }
 
+//"Run_DoesEveryoneHaveThisUnlockableUnlocked_UnlockableDef"
     private bool TrueifyRunAll(On.RoR2.Run.orig_DoesEveryoneHaveThisUnlockableUnlocked_UnlockableDef orig, Run self, UnlockableDef unlockableDef)
     {
       if (NetworkServer.active)
-        return true;
+        return IsTheSkinUnlockable(unlockableDef) ? true : orig(self, unlockableDef);
       Log.Warning("[Server] function 'Unlockify.Trueify' called on client");
-      return false;
+      return orig(self, unlockableDef);
     }
 
+//"Run_DoesEveryoneHaveThisUnlockableUnlocked_string"
     private bool TrueifyRunAll2(On.RoR2.Run.orig_DoesEveryoneHaveThisUnlockableUnlocked_string orig, Run self, string unlockableName)
     {
       if (NetworkServer.active)
-        return true;
+        return IsTheSkinUnlockable(unlockableName) ? true : orig(self, unlockableName);
       Log.Warning("[Server] function 'Unlockify.Trueify' called on client");
-      return false;
+      return orig(self, unlockableName);
     }
 
+//"UserProfile_HasUnlockable_UnlockableDef"
     private bool TrueifyProfile(On.RoR2.UserProfile.orig_HasUnlockable_UnlockableDef orig, UserProfile self, UnlockableDef unlockableDef)
     {
-      return true;
+      return IsTheSkinUnlockable(unlockableDef) ? true : orig(self, unlockableDef);
     }
 
+//"UserProfile_HasUnlockable_string"
     private bool TrueifyProfile2(On.RoR2.UserProfile.orig_HasUnlockable_string orig, UserProfile self, string unlockableName)
     {
-      return true;
+      return IsTheSkinUnlockable(unlockableName) ? true : orig(self, unlockableName);
     }
 
+//scrapped/unused
     private bool TrueifyAchievement(On.RoR2.UserProfile.orig_HasAchievement orig, UserProfile self, string achievementName)
     {
       return true;
     }
 
+//scrpaped/unused
     private bool TrueifyAchievement2(On.RoR2.UserProfile.orig_CanSeeAchievement orig, UserProfile self, string achievementName)
     {
       return true;
     }
 
+//scrapped/unused
     private bool TrueifySurvivor(On.RoR2.UserProfile.orig_HasSurvivorUnlocked orig, UserProfile self, SurvivorIndex survivorIndex)
     {
       return true;
     }
 
+//scrapped/unused
     private bool TrueifyPickup(On.RoR2.UserProfile.orig_HasDiscoveredPickup orig, UserProfile self, PickupIndex pickupIndex)
     {
       return true;
