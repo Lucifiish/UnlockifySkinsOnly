@@ -95,15 +95,15 @@ namespace Unlockify
       }
     }
 
-    private bool IsTheSkinUnlockable(UnlockableDef def) {
+    private bool IsTheUnlockableSkin(UnlockableDef def) {
       return def != null
       && (SkinUnlocksHash.Contains(def) || SkinSpecificUnlocksHash.Contains(def.cachedName));
     }
-    private bool IsTheSkinUnlockable(string name) {//We're well past the point where I don't know what's going on. Maybe it'll work maybe it wont
+    private bool IsTheUnlockableSkin(string name) {//We're well past the point where I don't know what's going on. Maybe it'll work maybe it wont
       if (string.IsNullOrEmpty(name)) return false;
       if (SkinSpecificUnlocksHash.Contains(name)) return true;
       var def = UnlockableCatalog.GetUnlockableDef(name);
-      return IsTheSkinUnlockable(def);
+      return IsTheUnlockableSkin(def);
     }
     private void DontGrantSteamAchievement(On.RoR2.AchievementSystemSteam.orig_AddAchievement orig, AchievementSystemSteam self, string achievementName)
     {
@@ -143,7 +143,7 @@ namespace Unlockify
     private bool TrueifyRun(On.RoR2.Run.orig_IsUnlockableUnlocked_UnlockableDef orig, Run self, UnlockableDef unlockableDef)
     { //If I understand what I'm changing here correctly, this should be replacing the "always unlock" use of this call to do, I think, nothing? Maybe?
       if (NetworkServer.active)
-        return IsTheSkinUnlockable(unlockableDef) ? true : orig(self, unlockableDef);
+        return IsTheUnlockableSkin(unlockableDef) ? true : orig(self, unlockableDef);
       Log.Warning("[Server] function 'Unlockify.TrueifyRun' called on client");
       return orig(self, unlockableDef);
     }
@@ -152,7 +152,7 @@ namespace Unlockify
     private bool TrueifyRun2(On.RoR2.Run.orig_IsUnlockableUnlocked_string orig, Run self, string unlockableName)
     {
       if (NetworkServer.active)
-        return IsTheSkinUnlockable(unlockableName) ? true : orig(self, unlockableName);
+        return IsTheUnlockableSkin(unlockableName) ? true : orig(self, unlockableName);
       Log.Warning("[Server] function 'Unlockify.TrueifyRun2' called on client");
       return orig(self, unlockableName);
     }
@@ -161,7 +161,7 @@ namespace Unlockify
     private bool TrueifyPreGameController(On.RoR2.PreGameController.orig_AnyUserHasUnlockable orig, UnlockableDef unlockableDef)
     {
       if (NetworkServer.active)
-        return IsTheSkinUnlockable(unlockableDef) ? true : orig(unlockableDef);
+        return IsTheUnlockableSkin(unlockableDef) ? true : orig(unlockableDef);
       Log.Warning("[Server] function 'Unlockify.TrueifyPreGameController' called on client");
       return orig(unlockableDef);
     }
@@ -170,7 +170,7 @@ namespace Unlockify
     private bool TrueifyRunAll(On.RoR2.Run.orig_DoesEveryoneHaveThisUnlockableUnlocked_UnlockableDef orig, Run self, UnlockableDef unlockableDef)
     {
       if (NetworkServer.active)
-        return IsTheSkinUnlockable(unlockableDef) ? true : orig(self, unlockableDef);
+        return IsTheUnlockableSkin(unlockableDef) ? true : orig(self, unlockableDef);
       Log.Warning("[Server] function 'Unlockify.Trueify' called on client");
       return orig(self, unlockableDef);
     }
@@ -179,7 +179,7 @@ namespace Unlockify
     private bool TrueifyRunAll2(On.RoR2.Run.orig_DoesEveryoneHaveThisUnlockableUnlocked_string orig, Run self, string unlockableName)
     {
       if (NetworkServer.active)
-        return IsTheSkinUnlockable(unlockableName) ? true : orig(self, unlockableName);
+        return IsTheUnlockableSkin(unlockableName) ? true : orig(self, unlockableName);
       Log.Warning("[Server] function 'Unlockify.Trueify' called on client");
       return orig(self, unlockableName);
     }
@@ -187,13 +187,13 @@ namespace Unlockify
 //"UserProfile_HasUnlockable_UnlockableDef"
     private bool TrueifyProfile(On.RoR2.UserProfile.orig_HasUnlockable_UnlockableDef orig, UserProfile self, UnlockableDef unlockableDef)
     {
-      return IsTheSkinUnlockable(unlockableDef) ? true : orig(self, unlockableDef);
+      return IsTheUnlockableSkin(unlockableDef) ? true : orig(self, unlockableDef);
     }
 
 //"UserProfile_HasUnlockable_string"
     private bool TrueifyProfile2(On.RoR2.UserProfile.orig_HasUnlockable_string orig, UserProfile self, string unlockableName)
     {
-      return IsTheSkinUnlockable(unlockableName) ? true : orig(self, unlockableName);
+      return IsTheUnlockableSkin(unlockableName) ? true : orig(self, unlockableName);
     }
 
 //scrapped/unused
